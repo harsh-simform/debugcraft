@@ -60,6 +60,15 @@ flowchart TD
 
 Phases 1→4 are a strict pipeline (each needs the previous phase's proven output). Phase 3 is the only loop-back point (max once, see error-handling.md). Phase 5 is the only fan-out point — every theory check and the cooldown check are independent of each other, so they dispatch together in one message with multiple parallel `Agent` calls instead of running one at a time.
 
+## CI/CD
+
+There is no central "publish" API for Claude Code plugins — this repo's `.claude-plugin/marketplace.json` is the distribution point itself (see [Install](#install-one-time-per-machine)). `.github/workflows/plugin-ci.yml` covers what CI actually can do:
+
+- **On every push/PR to `main`**: `claude plugin validate` runs `--strict` against `plugin.json` and `marketplace.json`, failing the build on schema errors or warnings.
+- **On push to `main`**: if `plugin.json`'s `version` isn't already tagged, it tags the release (`claude plugin tag`) and creates a GitHub Release.
+
+To release a new version: bump `version` in `.claude-plugin/plugin.json`, merge to `main`, CI tags and releases it automatically.
+
 ## Design principles
 
 - No assumptions — every claim traces to a tool call.
