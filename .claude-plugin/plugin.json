@@ -1,0 +1,18 @@
+{
+  "name": "debugcraft",
+  "version": "0.1.0",
+  "description": "Multi-agent incident/root-cause debugging using whatever observability MCP servers a project has connected (Datadog, Azure Monitor/App Insights, or others). Finds when it broke, what broke, who/what triggered it, and produces a compact plain-English HTML report with diagrams. Project-agnostic — works on any codebase/environment.",
+  "author": {
+    "name": "harsh.m@simformsolutions.com"
+  },
+  "keywords": [
+    "debugging",
+    "root-cause",
+    "incident",
+    "observability",
+    "datadog",
+    "azure",
+    "multi-agent",
+    "reporting"
+  ]
+}

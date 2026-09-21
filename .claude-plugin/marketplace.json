@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "debugcraft-marketplace",
+  "description": "Marketplace for debugcraft — multi-agent observability debugging plugin",
+  "owner": {
+    "name": "harsh.m@simformsolutions.com"
+  },
+  "plugins": [
+    {
+      "name": "debugcraft",
+      "source": ".",
+      "description": "Multi-agent incident/root-cause debugging over Datadog/Azure (or any connected observability MCP), with a compact plain-English HTML report as the output.",
+      "category": "observability",
+      "tags": ["debugging", "root-cause", "datadog", "azure", "incident", "reporting"]
+    }
+  ]
+}
