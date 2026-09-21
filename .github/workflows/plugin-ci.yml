@@ -1,0 +1,71 @@
+name: Plugin CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Claude Code CLI
+        run: curl -fsSL https://claude.ai/install.sh | bash
+
+      - name: Add Claude Code to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Validate plugin.json
+        run: claude plugin validate .claude-plugin/plugin.json --strict --json
+
+      - name: Validate marketplace.json
+        run: claude plugin validate .claude-plugin/marketplace.json --strict --json
+
+  release:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Claude Code CLI
+        run: curl -fsSL https://claude.ai/install.sh | bash
+
+      - name: Add Claude Code to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Read plugin version
+        id: version
+        run: echo "version=$(jq -r .version .claude-plugin/plugin.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether this version is already tagged
+        id: check_tag
+        run: |
+          if git tag --list "debugcraft--v${{ steps.version.outputs.version }}" | grep -q .; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Tag release
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          claude plugin tag . --push -m "debugcraft v%s"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "debugcraft--v${{ steps.version.outputs.version }}" \
+            --title "debugcraft v${{ steps.version.outputs.version }}" \
+            --generate-notes
