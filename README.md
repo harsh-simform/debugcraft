@@ -7,7 +7,7 @@ Given an incident/anomaly ("why did staging DB CPU spike yesterday", "why did ch
 ## Install (one-time, per machine)
 
 ```
-/plugin marketplace add ~/Documents/GitHub/debugcraft
+/plugin marketplace add harsh-simform/debugcraft
 /plugin install debugcraft@debugcraft-marketplace
 ```
 
