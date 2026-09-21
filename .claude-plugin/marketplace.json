@@ -3,7 +3,7 @@
   "name": "debugcraft-marketplace",
   "description": "Marketplace for debugcraft — multi-agent observability debugging plugin",
   "owner": {
-    "name": "harsh.m@simformsolutions.com"
+    "name": "harsh-simform"
   },
   "plugins": [
     {
